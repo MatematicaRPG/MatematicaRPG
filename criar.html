@@ -598,8 +598,8 @@
       </div>
 
       <div class="button-group">
-        <button class="btn-secondary" onclick="voltarHome()">← Voltar</button>
-        <button class="btn-primary" onclick="criar()">✨ Criar Personagem</button>
+        <button class="btn-secondary" type="button" onclick="voltarHome()">← Voltar</button>
+        <button class="btn-primary" type="button" onclick="criar()">✨ Criar Personagem</button>
       </div>
 
       <div class="loading" id="load">
@@ -786,4 +786,42 @@
       }
 
       if (itensSelecionados.length < 2) {
-        mostrarMensagem('Escolha 2 itens para seu inventá
+        mostrarMensagem('Escolha 2 itens para seu inventário!', 'erro');
+        return;
+      }
+
+      // Mostra loading
+      document.getElementById('load').style.display = 'block';
+
+      // Simula delay de salvamento
+      setTimeout(() => {
+        // Salva dados no localStorage
+        localStorage.setItem('personagem_nome', nome);
+        localStorage.setItem('personagem_senha', senha);
+        localStorage.setItem('personagem_classe', profissaoSelecionada);
+        localStorage.setItem('personagem_desc', desc);
+        localStorage.setItem('personagem_foto', foto);
+        localStorage.setItem('personagem_itens', JSON.stringify(itensSelecionados));
+        localStorage.setItem('personagem_nivel', '1');
+        localStorage.setItem('personagem_exp', '0');
+
+        // Salva stats baseado na profissão
+        const stats = {
+          'Guerreiro': { vida: 120, ataque: 20, defesa: 15 },
+          'Mago': { vida: 80, ataque: 25, defesa: 8 },
+          'Arqueiro': { vida: 100, ataque: 22, defesa: 10 },
+          'Clérigo': { vida: 110, ataque: 15, defesa: 12 }
+        };
+        localStorage.setItem('personagem_stats', JSON.stringify(stats[profissaoSelecionada]));
+
+        mostrarMensagem('✨ Personagem criado com sucesso!', 'sucesso');
+        
+        // Redireciona para página de personagem
+        setTimeout(() => {
+          window.location.href = 'personagem.html';
+        }, 1500);
+      }, 1500);
+    }
+  </script>
+</body>
+</html>
