@@ -790,40 +790,34 @@
         return;
       }
 
-      if (desc.length > 200) {
-        mostrarMensagem('Descrição muito longa! Máximo 200 caracteres', 'erro');
-        return;
-      }
-
-      // Dados do personagem
-      const personagem = {
-        nome: nome,
-        senha: senha,
-        classe: profissaoSelecionada,
-        itens: itensSelecionados,
-        descricao: desc,
-        foto: foto,
-        dataCriacao: new Date().toLocaleDateString('pt-BR'),
-        nivel: 1,
-        experiencia: 0
-      };
-
-      // Mostra loading
+      // Mostrar loading
       document.getElementById('load').style.display = 'block';
 
-      // Simula envio ao servidor
+      // Simular envio de dados (substitua com sua lógica real de backend)
       setTimeout(() => {
-        // Salva no localStorage (para demo)
-        localStorage.setItem('personagem_' + nome, JSON.stringify(personagem));
-        
+        const personagem = {
+          nome: nome,
+          senha: senha,
+          profissao: profissaoSelecionada,
+          descricao: desc,
+          foto: foto,
+          itens: itensSelecionados,
+          dataCriacao: new Date().toISOString()
+        };
+
+        // Armazenar no localStorage (desenvolvimento) ou enviar ao servidor
+        let personagens = JSON.parse(localStorage.getItem('personagens')) || [];
+        personagens.push(personagem);
+        localStorage.setItem('personagens', JSON.stringify(personagens));
+
         document.getElementById('load').style.display = 'none';
-        mostrarMensagem('✨ Personagem criado com sucesso! Bem-vindo ' + nome + '!', 'sucesso');
-        
-        // Redireciona após 2 segundos
+        mostrarMensagem('✨ Personagem criado com sucesso!', 'sucesso');
+
+        // Redirecionar após 2 segundos
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 2000);
-      }, 2000);
+      }, 1500);
     }
   </script>
 </body>
