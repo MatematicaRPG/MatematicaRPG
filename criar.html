@@ -786,4 +786,46 @@
       }
 
       if (itensSelecionados.length < 2) {
-        mostrarMensagem('Escolha 2 itens para seu inventá
+        mostrarMensagem('Escolha 2 itens para seu inventário!', 'erro');
+        return;
+      }
+
+      if (desc.length > 200) {
+        mostrarMensagem('Descrição muito longa! Máximo 200 caracteres', 'erro');
+        return;
+      }
+
+      // Dados do personagem
+      const personagem = {
+        nome: nome,
+        senha: senha,
+        classe: profissaoSelecionada,
+        itens: itensSelecionados,
+        descricao: desc,
+        foto: foto,
+        dataCriacao: new Date().toLocaleDateString('pt-BR'),
+        nivel: 1,
+        experiencia: 0
+      };
+
+      // Mostra loading
+      document.getElementById('load').style.display = 'block';
+
+      // Simula envio ao servidor
+      setTimeout(() => {
+        // Salva no localStorage (para demo)
+        localStorage.setItem('personagem_' + nome, JSON.stringify(personagem));
+        
+        document.getElementById('load').style.display = 'none';
+        mostrarMensagem('✨ Personagem criado com sucesso! Bem-vindo ' + nome + '!', 'sucesso');
+        
+        // Redireciona após 2 segundos
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      }, 2000);
+    }
+  </script>
+</body>
+
+</html>
