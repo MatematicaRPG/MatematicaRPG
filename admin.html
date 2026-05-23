@@ -790,4 +790,178 @@
     function fazerLogin(event) {
       event.preventDefault();
 
-      const usuario = docum
+      const usuario = document.getElementById('usuarioLogin').value.trim();
+      const senha = document.getElementById('senhaLogin').value.trim();
+
+      if (usuario === ADMIN_USER && senha === ADMIN_PASS) {
+        document.getElementById('modalLogin').style.display = 'none';
+        document.getElementById('painelAdmin').classList.add('show');
+        carregarUsuarios();
+      } else {
+        mostrarErroModal('❌ Credenciais inválidas!');
+      }
+    }
+
+    function mostrarErroModal(mensagem) {
+      const erroEl = document.getElementById('erroModal');
+      erroEl.textContent = mensagem;
+      erroEl.classList.add('show');
+
+      setTimeout(() => {
+        erroEl.classList.remove('show');
+      }, 3000);
+    }
+
+    function voltarHome() {
+      window.location.href = '/index.html';
+    }
+
+    function fazerLogout() {
+      window.location.href = '/index.html';
+    }
+
+    function carregarUsuarios() {
+      // Simula carregamento de usuários do localStorage
+      const nome = localStorage.getItem('personagem_nome');
+      const classe = localStorage.getItem('personagem_classe');
+
+      if (nome) {
+        usuariosData = [
+          {
+            nome: nome,
+            classe: classe || 'Guerreiro',
+            avatar: '⚔️',
+            hp: 100,
+            energia: 50,
+            xp: 0,
+            nivel: 1
+          }
+        ];
+
+        atualizarListaUsuarios();
+      } else {
+        document.getElementById('listaUsuarios').innerHTML = '<p style="text-align: center; color: #aaa;">Nenhum personagem criado ainda.</p>';
+      }
+    }
+
+    function atualizarListaUsuarios() {
+      const listaEl = document.getElementById('listaUsuarios');
+      listaEl.innerHTML = '';
+
+      usuariosData.forEach((usuario, index) => {
+        const usuarioItem = document.createElement('div');
+        usuarioItem.className = 'usuario-item';
+        usuarioItem.onclick = () => selecionarPersonagem(index);
+
+        usuarioItem.innerHTML = `
+          <div class="usuario-avatar">${usuario.avatar}</div>
+          <div class="usuario-info">
+            <div class="usuario-nome">${usuario.nome}</div>
+            <div class="usuario-classe">${usuario.classe}</div>
+          </div>
+        `;
+
+        listaEl.appendChild(usuarioItem);
+      });
+    }
+
+    function selecionarPersonagem(index) {
+      personagemSelecionado = usuariosData[index];
+
+      document.getElementById('editorVazio').classList.add('hidden');
+      document.getElementById('personagemSelecionado').classList.remove('hidden');
+
+      document.getElementById('personagemNome').textContent = personagemSelecionado.nome;
+      document.getElementById('personagemClasse').textContent = personagemSelecionado.classe;
+      document.getElementById('avatarGrande').textContent = personagemSelecionado.avatar;
+
+      document.getElementById('hpAtual').textContent = personagemSelecionado.hp;
+      document.getElementById('hpMax').textContent = personagemSelecionado.hp;
+      document.getElementById('energiaAtual').textContent = personagemSelecionado.energia;
+      document.getElementById('energiaMax').textContent = '100';
+      document.getElementById('xpAtual').textContent = personagemSelecionado.xp;
+      document.getElementById('nivelAtual').textContent = personagemSelecionado.nivel;
+
+      // Atualizar classe dos usuários
+      document.querySelectorAll('.usuario-item').forEach((el, i) => {
+        if (i === index) {
+          el.classList.add('selecionado');
+        } else {
+          el.classList.remove('selecionado');
+        }
+      });
+    }
+
+    function deselecionar() {
+      personagemSelecionado = null;
+      document.getElementById('editorVazio').classList.remove('hidden');
+      document.getElementById('personagemSelecionado').classList.add('hidden');
+      document.querySelectorAll('.usuario-item').forEach(el => {
+        el.classList.remove('selecionado');
+      });
+    }
+
+    function adicionarHP(valor) {
+      if (!personagemSelecionado) return;
+      personagemSelecionado.hp += valor;
+      document.getElementById('hpAtual').textContent = personagemSelecionado.hp;
+      mostrarSucesso('sucessoHP', `✅ +${valor} HP adicionado!`);
+    }
+
+    function adicionarHPCustom() {
+      const valor = parseInt(document.getElementById('hpCustom').value);
+      if (isNaN(valor) || valor <= 0) {
+        mostrarSucesso('sucessoHP', '❌ Digite um valor válido!');
+        return;
+      }
+      adicionarHP(valor);
+      document.getElementById('hpCustom').value = '';
+    }
+
+    function adicionarEnergia(valor) {
+      if (!personagemSelecionado) return;
+      personagemSelecionado.energia = Math.min(personagemSelecionado.energia + valor, 100);
+      document.getElementById('energiaAtual').textContent = personagemSelecionado.energia;
+      mostrarSucesso('sucessoEnergia', `✅ +${valor} Energia adicionada!`);
+    }
+
+    function adicionarEnergiaCustom() {
+      const valor = parseInt(document.getElementById('energiaCustom').value);
+      if (isNaN(valor) || valor <= 0) {
+        mostrarSucesso('sucessoEnergia', '❌ Digite um valor válido!');
+        return;
+      }
+      adicionarEnergia(valor);
+      document.getElementById('energiaCustom').value = '';
+    }
+
+    function adicionarXP(valor) {
+      if (!personagemSelecionado) return;
+      personagemSelecionado.xp += valor;
+      document.getElementById('xpAtual').textContent = personagemSelecionado.xp;
+      mostrarSucesso('sucessoXP', `✅ +${valor} XP adicionado!`);
+    }
+
+    function adicionarXPCustom() {
+      const valor = parseInt(document.getElementById('xpCustom').value);
+      if (isNaN(valor) || valor <= 0) {
+        mostrarSucesso('sucessoXP', '❌ Digite um valor válido!');
+        return;
+      }
+      adicionarXP(valor);
+      document.getElementById('xpCustom').value = '';
+    }
+
+    function mostrarSucesso(elementId, mensagem) {
+      const el = document.getElementById(elementId);
+      el.textContent = mensagem;
+      el.classList.add('show');
+
+      setTimeout(() => {
+        el.classList.remove('show');
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
