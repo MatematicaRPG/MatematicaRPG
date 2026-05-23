@@ -614,19 +614,16 @@
     let profissaoSelecionada = '';
 
     function selecionarProfissao(nome, elemento) {
+      // Remove seleção anterior
       document.querySelectorAll('.profissao-card').forEach(el => {
         el.classList.remove('selecionado');
       });
 
+      // Adiciona seleção nova
       elemento.classList.add('selecionado');
       profissaoSelecionada = nome;
-      
-      // Também sincroniza com a tag <select> caso queira usar as duas abordagens
-      const selectElement = document.getElementById('profissao');
-      if(selectElement) {
-        selectElement.value = nome;
-      }
 
+      // Atualiza stats baseado na profissão
       atualizarStats();
     }
 
@@ -645,6 +642,7 @@
         el.classList.add('selecionado');
       }
 
+      // Atualiza contador
       document.getElementById('contador').innerText = `Escolha: ${itensSelecionados.length}/2`;
     }
 
@@ -705,8 +703,12 @@
       }
 
       let forca = 0;
+      
+      // Verifica comprimento
       if (senha.length >= 8) forca++;
       if (senha.length >= 12) forca++;
+      
+      // Verifica tipos de caracteres
       if (/[a-z]/.test(senha)) forca++;
       if (/[A-Z]/.test(senha)) forca++;
       if (/[0-9]/.test(senha)) forca++;
@@ -730,6 +732,7 @@
       forcaSenha.className = `password-strength ${classe}`;
     }
 
+    // Adiciona listener ao campo de senha
     document.getElementById('senha').addEventListener('input', function() {
       verificarForcaSenha(this.value);
     });
@@ -745,16 +748,18 @@
       }, 3000);
     }
 
-    // Função de Voltar Corrigida
     function voltarHome() {
       window.location.href = 'index.html';
     }
 
-    // Função de Criar Completada com Sucesso
     function criar() {
       let nome = document.getElementById('nome').value.trim();
       let senha = document.getElementById('senha').value.trim();
-      
+      let desc = document.getElementById('desc').value.trim();
+      let foto = document.getElementById('preview').innerHTML.includes('img') ? 
+        document.getElementById('preview').querySelector('img').src : '';
+
+      // Validações
       if (nome === "") {
         mostrarMensagem('Digite um nome para seu personagem!', 'erro');
         return;
@@ -770,19 +775,15 @@
         return;
       }
 
+      if (senha.length < 6) {
+        mostrarMensagem('Senha muito curta! Mínimo 6 caracteres', 'erro');
+        return;
+      }
+
       if (!profissaoSelecionada) {
         mostrarMensagem('Escolha uma classe para seu personagem!', 'erro');
         return;
       }
 
       if (itensSelecionados.length < 2) {
-        mostrarMensagem('Escolha exatamente 2 itens para começar!', 'erro');
-        return;
-      }
-
-      // Mostra o feedback visual de carregamento
-      document.getElementById('load').style.display = 'block';
-      
-      setTimeout(() => {
-        document.getElementById('load').style.display = 'none';
-        mostrarMensagem('✨ Personagem criado com sucesso!', 'suc
+        mostrarMensagem('Escolha 2 itens para seu inventá
