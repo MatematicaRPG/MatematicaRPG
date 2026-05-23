@@ -680,7 +680,7 @@
 
     <!-- Botão Voltar -->
     <div class="botoes-rodape">
-      <button class="btn-voltar" onclick="voltarHome()">🏠 Voltar ao Início</button>
+      <button type="button" class="btn-voltar" onclick="voltarHome()">🏠 Voltar ao Início</button>
     </div>
   </div>
 
@@ -783,4 +783,57 @@
       const xpPercent = Math.round((xpAtual / xpMax) * 100);
       document.getElementById('xpValor').textContent = `${xpAtual}/${xpMax}`;
       document.getElementById('xpBar').style.width = xpPercent + '%';
-      document.getElementById('xpPercent').textContent = xpPercent
+      document.getElementById('xpPercent').textContent = xpPercent + '%';
+
+      // Atualiza nível
+      document.getElementById('nivel').textContent = nivel;
+
+      // Atualiza inimigos derrotados
+      document.getElementById('inimigosDerotados').textContent = inimigosDerotados;
+
+      // Carrega inventário
+      const inventarioGrid = document.getElementById('inventarioGrid');
+      inventarioGrid.innerHTML = '';
+
+      const nomes_itens = {
+        'Espada': '🗡️',
+        'Escudo': '🛡️',
+        'Poção': '🧪',
+        'Arco': '🏹',
+        'Magia': '🔥',
+        'Cristal': '💎'
+      };
+
+      itens.forEach(item => {
+        const itemCard = document.createElement('div');
+        itemCard.className = 'item-card';
+        itemCard.innerHTML = `
+          <div class="emoji">${nomes_itens[item] || '❓'}</div>
+          <div class="nome">${item}</div>
+        `;
+        inventarioGrid.appendChild(itemCard);
+      });
+
+      // Carrega conquistas
+      const conquistasGrid = document.getElementById('conquistasGrid');
+      conquistasGrid.innerHTML = '';
+
+      conquistasDisponiveis.forEach(conquista => {
+        const conquistaCard = document.createElement('div');
+        conquistaCard.className = 'conquista-card';
+        
+        // Simula desbloqueio da primeira conquista
+        if (conquista.id === 1) {
+          conquistaCard.classList.add('desbloqueada');
+        }
+        
+        conquistaCard.innerHTML = `
+          <div class="emoji">${conquista.emoji}</div>
+          <div class="nome">${conquista.nome}</div>
+        `;
+        conquistasGrid.appendChild(conquistaCard);
+      });
+    }
+  </script>
+</body>
+</html>
